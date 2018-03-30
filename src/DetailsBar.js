@@ -8,7 +8,9 @@ class DetailsBar extends Component {
   render() {
     return (
       <div className="sideBar">
-        <h1 className="title">Orlando Parks Map!</h1>
+        <div className="header">
+          <h1 className="title">Orlando Parks Map!</h1>
+        </div>
 
         <div className="filterArea">
           <FilterMarkers />

@@ -7,10 +7,13 @@
 
 .title {
   font-size: 25px;
+  margin: auto;
+}
+
+.header {
   height: 10vh;
-  margin: 0;
   background-color: green;
-  justify-content: center;
+  display: flex;
 }
 
 .filterArea {
