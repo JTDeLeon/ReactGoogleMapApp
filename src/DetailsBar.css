@@ -1,0 +1,24 @@
+.sideBar {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.title {
+  font-size: 25px;
+  height: 10vh;
+  margin: 0;
+  background-color: green;
+  justify-content: center;
+}
+
+.filterArea {
+  height: 30vh;
+  background-color: blue;
+}
+
+.listViewArea {
+  height: 60vh;
+  background-color: yellow;
+}
