@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DetailsBar from './DetailsBar'
+import Container from './Container'
 import './App.css';
 
 class App extends Component {
@@ -9,7 +10,9 @@ class App extends Component {
         <div className="details_Bar">
           <DetailsBar />
         </div>
-        <div className="map"></div>
+        <div className="map">
+          <Container />
+        </div>
       </div>
     );
   }
