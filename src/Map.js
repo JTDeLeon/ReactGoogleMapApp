@@ -39,12 +39,14 @@ export class Map extends Component {
       })
       this.map = new maps.Map(node, mapConfig);
 
+      //Marker
       const marker = new google.maps.Marker({
         position: center,
         map: this.map,
         title: "Current Location"
       });
 
+      //InfoWindow
       var infowindow = new google.maps.InfoWindow({
         content: `<h3>${marker.title}</h3>
         <h4>At position ${marker.position}</h4>`
