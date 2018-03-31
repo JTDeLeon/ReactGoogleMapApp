@@ -44,5 +44,6 @@ export class Container extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao'
+  apiKey: 'AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao',
+  libraries: ['places']
 })(Container)
