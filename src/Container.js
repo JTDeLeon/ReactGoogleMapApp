@@ -8,7 +8,7 @@ export class Container extends Component {
 
   render() {
     const style = {
-      width: '100vw',
+      width: '70vw',
       height: '100vh'
     }
 
