@@ -13,12 +13,14 @@ export class Container extends Component {
     }
 
     console.log(this.props.google)
+    console.log("Meters passed in CONTAINER is ",this.props.distance);
     return (
       <div style={style}>
 
         <Map
           google={this.props.google}
           location={this.props.location}
+          distance={this.props.distance}
           // style={style}
           // initialCenter={{
           //   lat: 28.529270,

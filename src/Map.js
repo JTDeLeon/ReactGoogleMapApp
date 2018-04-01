@@ -8,11 +8,7 @@ export class Map extends Component {
   //Will handle updates to the map
   componentDidUpdate(prevProps, prevState) {
     console.log("Inside the componentDidUpdate");
-    console.log(prevProps.google)
-    console.log(this.props.google)
-    // if (prevProps.google !== this.props.google) {
-      this.loadMap();
-    // }
+    this.loadMap();
   }
 
   //Will handle inital load
@@ -85,10 +81,12 @@ export class Map extends Component {
         infowindow.open(this.map, marker);
       });
 
+      console.log("Meters passed in is ",this.props.distance);
+
       var service = new google.maps.places.PlacesService(this.map);
       service.nearbySearch({
         location: center,
-        radius: 5000,
+        radius: this.props.distance,
         type: ['park']
       }, this.callback);
     }

@@ -11,7 +11,8 @@ class App extends Component {
     location: {
       lat: 28.229270,
       lng: -81.276423
-    }
+    },
+    metersAway: 8045
   }
 
   getLatLong(address){
@@ -32,7 +33,6 @@ class App extends Component {
         newLocation.lng = lng;
         console.log("NEW Location",newLocation);
         this.setState({location:newLocation})
-        // this.setState({location:lng})
 
         console.log(this.state);
 
@@ -43,11 +43,18 @@ class App extends Component {
     );
   }
 
+  getDistance(miles){
+    const meters = Math.ceil(miles*1609.344);
+    console.log("METERS IS NOW ",meters);
+    this.setState({metersAway:meters});
+  }
+
   updateLocation(obj) {
     console.log("coming from APP component");
     console.log(obj);
 
-    this.getLatLong(obj.address)
+    this.getLatLong(obj.address);
+    this.getDistance(obj.distance);
 
   }
 
@@ -66,6 +73,7 @@ class App extends Component {
         <div className="map">
           <Container
             location={this.state.location}
+            distance={this.state.metersAway}
           />
         </div>
       </div>
