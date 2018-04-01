@@ -7,9 +7,12 @@ import PropTypes from 'prop-types';
 export class Map extends Component {
   //Will handle updates to the map
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.google !== this.props.google) {
+    console.log("Inside the componentDidUpdate");
+    console.log(prevProps.google)
+    console.log(this.props.google)
+    // if (prevProps.google !== this.props.google) {
       this.loadMap();
-    }
+    // }
   }
 
   //Will handle inital load
@@ -44,6 +47,7 @@ export class Map extends Component {
   }
 
   loadMap() {
+    console.log("loading the map")
     if (this.props && this.props.google) {
       // google is available
       const {google} = this.props;
