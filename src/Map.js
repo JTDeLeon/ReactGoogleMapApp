@@ -40,6 +40,13 @@ export class Map extends Component {
       position: placeLoc
     });
     console.log(place)
+
+    let infowindow = new this.props.google.maps.InfoWindow();
+
+    this.props.google.maps.event.addListener(marker, 'click', () => {
+      infowindow.setContent(place.name);
+      infowindow.open(this.map, marker);
+    });
   }
 
   loadMap() {
