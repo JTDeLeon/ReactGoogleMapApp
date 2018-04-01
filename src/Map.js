@@ -14,12 +14,7 @@ export class Map extends Component {
 
   //Will handle inital load
   componentDidMount(){
-    console.log("This was mounted")
     this.loadMap();
-    console.log(this.props);
-    console.log(this.props.google);
-    console.log(ReactDOM.findDOMNode(this.refs.map));
-
   }
 
   callback = (results, status) => {
@@ -39,7 +34,6 @@ export class Map extends Component {
       map: this.map,
       position: placeLoc
     });
-    console.log(place)
 
     let infowindow = new this.props.google.maps.InfoWindow();
 
@@ -59,8 +53,11 @@ export class Map extends Component {
       const node = ReactDOM.findDOMNode(mapRef);
 
       let zoom = 13;
-      let lat = 28.529270;
-      let lng = -81.276423;
+      // let lat = 28.529270;
+      // let lng = -81.276423;
+      let lat = this.props.location.lat;
+      let lng = this.props.location.lng;
+
       const center = new maps.LatLng(lat, lng);
       const mapConfig = Object.assign({}, {
         center: center,

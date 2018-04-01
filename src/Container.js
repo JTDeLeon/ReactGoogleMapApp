@@ -18,6 +18,7 @@ export class Container extends Component {
 
         <Map
           google={this.props.google}
+          location={this.props.location}
           // style={style}
           // initialCenter={{
           //   lat: 28.529270,

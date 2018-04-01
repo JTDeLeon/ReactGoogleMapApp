@@ -5,6 +5,15 @@ import './DetailsBar.css';
 
 
 class DetailsBar extends Component {
+
+  updateLocation(obj) {
+    console.log("coming from details bar component");
+    console.log(obj);
+
+    //Sends to App
+    this.props.updateLocation(obj);
+  }
+
   render() {
     return (
       <div className="sideBar">
@@ -13,7 +22,11 @@ class DetailsBar extends Component {
         </div>
 
         <div className="filterArea">
-          <FilterMarkers />
+          <FilterMarkers
+            updateLocation={(obj)=>{
+              this.updateLocation(obj);
+            }}
+          />
         </div>
 
         <div className="listViewArea">
