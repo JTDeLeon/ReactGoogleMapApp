@@ -9,18 +9,22 @@ class FilterMarkers extends Component {
 
   handleClick = (event) => {
     console.log("click has occured")
-    //Collects user input
-    let locationDetails = {
-      address: document.querySelector('#location').value,
-      distance: document.querySelector('#distance').value
+    if(document.querySelector('#location').value.length === 0){
+      window.alert("Uh Oh! Insert an address please.");
+    }else{
+      //Collects user input
+      let locationDetails = {
+        address: document.querySelector('#location').value,
+        distance: document.querySelector('#distance').value
+      }
+      console.log(locationDetails.address);
+      console.log(locationDetails.distance);
+
+      //Sends to parent component
+      this.props.updateLocation(locationDetails);
+
+      return locationDetails;
     }
-    console.log(locationDetails.address);
-    console.log(locationDetails.distance);
-
-    //Sends to parent component
-    this.props.updateLocation(locationDetails);
-
-    return locationDetails;
   }
 
   render() {
@@ -46,7 +50,7 @@ class FilterMarkers extends Component {
           <input
             id="location"
             type="address"
-            placeholder="Insert Location"
+            placeholder="Insert Your Address Here"
             onChange={this.handleChange}
           ></input>
 

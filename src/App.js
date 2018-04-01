@@ -9,8 +9,8 @@ class App extends Component {
   //Handles the location changes
   state = {
     location: {
-      lat: 28.229270,
-      lng: -81.276423
+      lat: 28.5383355,
+      lng: -81.3792365
     },
     metersAway: 8045
   }
