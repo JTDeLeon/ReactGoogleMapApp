@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+
 
 //Component set up with the help a couple articles on :   https://www.fullstackreact.com/articles/how-to-write-a-google-maps-react-component/ & https://medium.com/front-end-hacking/using-the-google-maps-javascript-api-in-a-react-project-b3ed734375c6
 export class Map extends Component {
@@ -18,6 +20,26 @@ export class Map extends Component {
     console.log(this.props.google);
     console.log(ReactDOM.findDOMNode(this.refs.map));
 
+  }
+
+  callback = (results, status) => {
+    if (status === "OK") {
+      for (var i = 0; i < results.length; i++) {
+      this.createMarker(results[i]);
+      }
+    }
+    else {
+      console.log("Error has occured")
+    }
+  }
+
+  createMarker = (place) => {
+    var placeLoc = place.geometry.location;
+    var marker = new this.props.google.maps.Marker({
+      map: this.map,
+      position: placeLoc
+    });
+    console.log(place)
   }
 
   loadMap() {
@@ -54,6 +76,13 @@ export class Map extends Component {
       marker.addListener('click', function() {
         infowindow.open(this.map, marker);
       });
+
+      var service = new google.maps.places.PlacesService(this.map);
+      service.nearbySearch({
+        location: center,
+        radius: 5000,
+        type: ['park']
+      }, this.callback);
     }
   }
 
@@ -71,6 +100,12 @@ export class Map extends Component {
 
 
   }
+}
+
+Map.propTypes = {
+  google: PropTypes.object,
+  zoom: PropTypes.number,
+  initialCenter: PropTypes.object
 }
 
 export default Map;
