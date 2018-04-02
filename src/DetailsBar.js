@@ -15,6 +15,7 @@ class DetailsBar extends Component {
   }
 
   render() {
+    // console.log("IN DETAILS BAR PROPS IS ",this.props)
     return (
       <div className="sideBar">
         <div className="header">
@@ -30,7 +31,9 @@ class DetailsBar extends Component {
         </div>
 
         <div className="listViewArea">
-          <ListView />
+          <ListView
+            parks={this.props.parks}
+          />
         </div>
 
 

@@ -82,6 +82,7 @@ class App extends Component {
             updateLocation={(obj)=>{
               this.updateLocation(obj);
             }}
+            parks={this.state.listOfParks}
           />
         </div>
         <div className="map">
