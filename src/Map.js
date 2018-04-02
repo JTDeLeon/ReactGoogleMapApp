@@ -89,6 +89,7 @@ export class Map extends Component {
     let infowindow = new this.props.google.maps.InfoWindow();
 
     this.props.google.maps.event.addListener(marker, 'click', () => {
+      marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
       infowindow.setContent(place.name);
       infowindow.open(this.map, marker);
     });
@@ -96,6 +97,7 @@ export class Map extends Component {
     return marker;
   }
 
+  //Received resource assistance from CSS-Tricks @ https://css-tricks.com/forums/topic/clickable-page-links-to-open-markers-on-google-map/
   showParkInfo = (event) =>{
     console.log("This was clicked");
     console.log(event);
@@ -117,6 +119,8 @@ export class Map extends Component {
 
     //Opens info window of the marker clicked
     new this.props.google.maps.event.trigger( markerToClick, 'click' );
+
+    markerToClick.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
   }
 
   // manageMarker(id){
