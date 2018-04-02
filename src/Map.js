@@ -1,29 +1,61 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-
+import ListView from './ListView'
 
 //Component set up with the help a couple articles on :   https://www.fullstackreact.com/articles/how-to-write-a-google-maps-react-component/ & https://medium.com/front-end-hacking/using-the-google-maps-javascript-api-in-a-react-project-b3ed734375c6
 export class Map extends Component {
+
   //Will handle updates to the map
   componentDidUpdate(prevProps, prevState) {
     console.log("Inside the componentDidUpdate");
-    this.loadMap();
+    console.log(prevProps);
+    console.log(this.props);
+    if(prevProps != this.props){
+      this.loadMap();
+      // prevProps = this.props;
+    }
+    else {
+      console.log("Not loading map from update comp")
+      // return
+    }
+
+
   }
 
   //Will handle inital load
   componentDidMount(){
+    console.log("Inside the componentDidMound");
     this.loadMap();
   }
 
   callback = (results, status) => {
+    let resultsArray=[];
     if (status === "OK") {
       for (var i = 0; i < results.length; i++) {
       this.createMarker(results[i]);
+      //Just gather 5 of the parks
+      // if(resultsArray.length<5){
+      //   //Ratings > 4 will be included
+      //   if(results[i].rating > 4){
+          //create array that will send to list view
+          resultsArray.push(results[i]);
+      //   }
+      //
+      // }
+
       }
+      // window.setTimeout(()=>{
+        console.log("results Array is ",resultsArray);
+        //Send to list view
+        this.props.updateListView(resultsArray);
+
+      // },2000);
+
     }
     else {
       console.log("Error has occured")
+      console.log(status)
     }
   }
 

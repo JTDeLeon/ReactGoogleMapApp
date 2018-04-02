@@ -12,7 +12,8 @@ class App extends Component {
       lat: 28.5383355,
       lng: -81.3792365
     },
-    metersAway: 8045
+    metersAway: 8045,
+    listOfParks: []
   }
 
   getLatLong(address){
@@ -58,6 +59,19 @@ class App extends Component {
 
   }
 
+  updateListView(obj) {
+    console.log("coming from APP component List View");
+    console.log(obj);
+    console.log(this.state.listOfParks);
+
+    if(this.state.listOfParks.length != obj.length){
+        this.setState({listOfParks:obj});
+    }
+
+    console.log(this.state);
+
+  }
+
   render() {
     console.log("APP IS RERENDERING")
     console.log(this.state)
@@ -74,6 +88,9 @@ class App extends Component {
           <Container
             location={this.state.location}
             distance={this.state.metersAway}
+            updateListView={(obj)=>{
+              this.updateListView(obj);
+            }}
           />
         </div>
       </div>

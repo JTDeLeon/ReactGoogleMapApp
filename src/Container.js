@@ -4,7 +4,13 @@ import Map from './Map';
 
 
 export class Container extends Component {
+  updateListView(obj) {
+    console.log("coming from Container component");
+    console.log(obj);
 
+    //Sends to App
+    this.props.updateListView(obj);
+  }
 
   render() {
     const style = {
@@ -21,6 +27,9 @@ export class Container extends Component {
           google={this.props.google}
           location={this.props.location}
           distance={this.props.distance}
+          updateListView={(obj)=>{
+            this.updateListView(obj);
+          }}
           // style={style}
           // initialCenter={{
           //   lat: 28.529270,
