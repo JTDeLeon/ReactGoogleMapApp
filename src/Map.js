@@ -87,10 +87,23 @@ export class Map extends Component {
     });
 
     let infowindow = new this.props.google.maps.InfoWindow();
+    let opened = '';
+    if(place.opening_hours){
+      // console.log("Opening hours are ",place.opening_hours.open_now)
+      if(place.opening_hours.open_now){
+        opened = '<h1 style="color:green">Yes!</h1>';
+      }else{
+        opened = '<h4 style="color:red">No...</h4>';
+      }
+    }else{
+      opened = 'N/A';
+    }
+
 
     this.props.google.maps.event.addListener(marker, 'click', () => {
       marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
-      infowindow.setContent(place.name);
+      infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p>`);
+      // infowindow.setContent(place.vicinity);
       infowindow.open(this.map, marker);
     });
 
@@ -154,7 +167,8 @@ export class Map extends Component {
       const marker = new google.maps.Marker({
         position: center,
         map: this.map,
-        title: "Current Location"
+        title: "Current Location",
+        icon: "http://maps.google.com/mapfiles/ms/icons/blue.png"
       });
 
       //InfoWindow
@@ -162,7 +176,7 @@ export class Map extends Component {
         content: `<h3>${marker.title}</h3>
         <h4>At position ${marker.position}</h4>`
       });
-      marker.addListener('click', function() {
+      marker.addListener('click', function(){
         infowindow.open(this.map, marker);
       });
 
