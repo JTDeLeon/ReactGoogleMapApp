@@ -7,14 +7,20 @@ class ListView extends Component {
     if(document.getElementById("list")){
       document.getElementById("list").innerHTML = "";
     }
+
+    let count = 0;
     return (
       <div>
+        <div>
+          <input id="show-listings" type="button" value="Show Listings" />
+          <input id="hide-listings" type="button" value="Hide Listings" />
+        </div>
+
         <h2>THIS IS ListView</h2>
-
         <ul id="list">
-
           {this.props.parks.forEach((park)=>{
-            document.querySelector("#list").insertAdjacentHTML('beforeend',`<li>${park.name}</li>`);
+            count++;
+            document.querySelector("#list").insertAdjacentHTML('beforeend',`<a href="#" id="park-${count}" data-id="${park.id}"><li>${park.name}</li></a>`);
           })}
         </ul>
       </div>

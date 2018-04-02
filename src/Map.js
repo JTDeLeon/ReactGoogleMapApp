@@ -6,6 +6,11 @@ import ListView from './ListView'
 //Component set up with the help a couple articles on :   https://www.fullstackreact.com/articles/how-to-write-a-google-maps-react-component/ & https://medium.com/front-end-hacking/using-the-google-maps-javascript-api-in-a-react-project-b3ed734375c6
 export class Map extends Component {
 
+  state = {
+    markers: [],
+    listArray: []
+  }
+
   //Will handle updates to the map
   componentDidUpdate(prevProps, prevState) {
     console.log("Inside the componentDidUpdate");
@@ -31,26 +36,41 @@ export class Map extends Component {
 
   callback = (results, status) => {
     let resultsArray=[];
+    let markers=[];
     if (status === "OK") {
       for (var i = 0; i < results.length; i++) {
-      this.createMarker(results[i]);
+      markers.push(this.createMarker(results[i]));
       //Just gather 5 of the parks
       // if(resultsArray.length<5){
       //   //Ratings > 4 will be included
       //   if(results[i].rating > 4){
           //create array that will send to list view
           resultsArray.push(results[i]);
+
       //   }
       //
       // }
 
       }
+      console.log("Markers Array is ",markers);
+      this.setState({markers:markers})
+      console.log("Markers Array from state is ",this.state)
+
       // window.setTimeout(()=>{
         console.log("results Array is ",resultsArray);
         //Send to list view
         this.props.updateListView(resultsArray);
+        this.setState({listArray:resultsArray});
+        console.log("ListArray From State is ",resultsArray)
 
       // },2000);
+
+      for(let x = 1; x <= resultsArray.length; x++){
+        document.getElementById('park-'+x).addEventListener('click', this.showParkInfo);
+      }
+
+
+      document.getElementById('hide-listings').addEventListener('click', this.hideListings);
 
     }
     else {
@@ -72,7 +92,36 @@ export class Map extends Component {
       infowindow.setContent(place.name);
       infowindow.open(this.map, marker);
     });
+
+    return marker;
   }
+
+  showParkInfo = (event) =>{
+    console.log("This was clicked");
+    console.log(event);
+
+    event.preventDefault();
+
+    let titleToFind = event.target.parentNode.dataset.id;
+    console.log("Title to find is set as ",titleToFind)
+    let markerToClick;
+    console.log(this.state)
+    // this.manageMarker(titleToFind);
+
+    for(let i = 0; i < this.state.listArray.length; i++) {
+        if(this.state.listArray[i].id === titleToFind) {
+          markerToClick = this.state.markers[i];
+        }
+    }
+    console.log("Marker to click is set as ",markerToClick);
+
+    //Opens info window of the marker clicked
+    new this.props.google.maps.event.trigger( markerToClick, 'click' );
+  }
+
+  // manageMarker(id){
+  //   console.log(this);
+  // }
 
   loadMap() {
     console.log("loading the map")
