@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import Geocode from "react-geocode";
 import ListView from './ListView'
 
 //Component set up with the help a couple articles on :   https://www.fullstackreact.com/articles/how-to-write-a-google-maps-react-component/ & https://medium.com/front-end-hacking/using-the-google-maps-javascript-api-in-a-react-project-b3ed734375c6
@@ -8,7 +9,8 @@ export class Map extends Component {
 
   state = {
     markers: [],
-    listArray: []
+    listArray: [],
+    parks: []
   }
 
   //Will handle updates to the map
@@ -80,18 +82,111 @@ export class Map extends Component {
   }
 
   createMarker = (place) => {
+    console.log("WITHIN CREATE MARKER, place is ",place);
     var placeLoc = place.geometry.location;
     var marker = new this.props.google.maps.Marker({
       map: this.map,
       position: placeLoc
     });
 
+    console.log("<<Handling FourSquare>>")
+    //Handle FourSquare
+    // console.log(this.getLatLong(place.vicinity));
+    // console.log("From inside STATE",this.state.latLong);
+
+
+    // Get latidude & longitude from address.
+    Geocode.fromAddress(place.vicinity).then(
+      response => {
+        const { lat, lng } = response.results[0].geometry.location;
+        console.log(lat, lng);
+        let latLong = { lat, lng };
+        // console.log(latLong);
+        // console.log("within the geocode function this is ",this);
+        this.setState({latLong: latLong},()=>{
+
+
+          this.fetchFourSquare();
+
+          console.log(this.state);
+        });
+
+        //   // let park;
+        //   fetch(`https://api.foursquare.com/v2/venues/explore?client_id=X4OARFL5FZCYC4WGAURB5HXBJELUJJ033LJP0DPKAJNY4D1P&client_secret=ZNY4UTYKDCL10GKLGJGVM13DA2NROCS2RKXR40FPJRTD5R4O&v=20130307&ll=${this.state.latLong.lat},${this.state.latLong.lng}&radius=250`)
+        //     .then((response)=>{
+        //       return response.json();
+        //      })
+        //      .then((myJson)=> {
+        //        console.log(myJson);
+        //        console.log(myJson.response.groups[0].items.forEach((parkItem)=>{
+        //          console.log(parkItem)
+        //          if(parkItem.venue.name.includes(place.name)){
+        //            console.log("4square Match is found! !")
+        //            console.log(parkItem.venue)
+        //            console.log("THIS IS SET TO ",this);
+        //            // window.park.push(parkItem.venue);
+        //            // park = parkItem.venue;
+        //            this.setState({parks:parkItem.venue},()=>{
+        //              console.log("Parks is set in state",this.state.parks);
+        //
+        //              let infowindow = new this.props.google.maps.InfoWindow();
+        //              let opened = '';
+        //              if(place.opening_hours){
+        //                // console.log("Opening hours are ",place.opening_hours.open_now)
+        //                if(place.opening_hours.open_now){
+        //                  opened = '<h3 style="color:green">Yes!</h3>';
+        //                }else{
+        //                  opened = '<h4 style="color:red">No...</h4>';
+        //                }
+        //              }else{
+        //                opened = 'N/A';
+        //              }
+        //
+        //              console.log("Opened is : ",opened);
+        //              console.log("This is ",this)
+        //              console.log("parks is (in state) : ",this.state.parks);
+        //              console.log("Marker is ", marker);
+        //
+        //              this.props.google.maps.event.addListener(marker, 'click', () => {
+        //                marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+        //                infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p><p>Rating: ${this.state.parks.rating}/10</p>`);
+        //                infowindow.open(this.map, marker);
+        //              });
+        //
+        //            })
+        //            // console.log("THIS STATE IS SET TO ",this.state);
+        //            // console.log(window.park);
+        //          }else {
+        //            console.log("Match is not found")
+        //          }
+        //        }))
+        //
+        //        console.log("FROM PARK ARRAY",window.park);
+        //      })
+        //      .catch((err)=>{
+        //        console.log("ERROR",err);
+        //      });
+        //
+        // });
+        // return latLong;
+
+      },
+      error => {
+        console.error(error);
+      }
+    );
+
+
+    console.log("FROM  Outside Functions");
+
+
+
     let infowindow = new this.props.google.maps.InfoWindow();
     let opened = '';
     if(place.opening_hours){
       // console.log("Opening hours are ",place.opening_hours.open_now)
       if(place.opening_hours.open_now){
-        opened = '<h1 style="color:green">Yes!</h1>';
+        opened = '<h3 style="color:green">Yes!</h3>';
       }else{
         opened = '<h4 style="color:red">No...</h4>';
       }
@@ -99,15 +194,77 @@ export class Map extends Component {
       opened = 'N/A';
     }
 
+    let park;
+    console.log("Before Fetch:")
+    console.log("this is ",this);
+    const stateTemp = this;
+    console.log('state is ',stateTemp.state);
+
+    // fetch(`https://api.foursquare.com/v2/venues/explore?client_id=X4OARFL5FZCYC4WGAURB5HXBJELUJJ033LJP0DPKAJNY4D1P&client_secret=ZNY4UTYKDCL10GKLGJGVM13DA2NROCS2RKXR40FPJRTD5R4O&v=20130307&ll=${this.state.latLong.lat},${this.state.latLong.lng}&radius=250`)
+    //   .then((response)=>{
+    //     return response.json();
+    //    })
+    //    .then((myJson)=> {
+    //      console.log(myJson);
+    //      console.log(myJson.response.groups[0].items.forEach((parkItem)=>{
+    //        console.log(parkItem)
+    //        if(parkItem.venue.name == place.name){
+    //          console.log("4square Match is found! !")
+    //          console.log(parkItem.venue)
+    //          console.log("THIS IS SET TO ",this);
+    //          // window.park.push(parkItem.venue);
+    //          park = parkItem.venue;
+    //          // this.setState({parks:parkItem.venue})
+    //          // console.log("THIS STATE IS SET TO ",this.state);
+    //          // console.log(window.park);
+    //        }
+    //      }))
+    //
+    //      console.log("FROM PARK ARRAY",window.park);
+    //    })
+    //    .catch((err)=>{
+    //      console.log("ERROR",err);
+    //    });
 
     this.props.google.maps.event.addListener(marker, 'click', () => {
       marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
-      infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p>`);
-      // infowindow.setContent(place.vicinity);
+      infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p><p>Rating: /10</p>`);
       infowindow.open(this.map, marker);
     });
 
     return marker;
+  }
+
+  fetchFourSquare = () => {
+    console.log("INSIDE THE CALL BACK funNTION",this.state)
+    let component = this;
+    fetch(`https://api.foursquare.com/v2/venues/explore?client_id=X4OARFL5FZCYC4WGAURB5HXBJELUJJ033LJP0DPKAJNY4D1P&client_secret=ZNY4UTYKDCL10GKLGJGVM13DA2NROCS2RKXR40FPJRTD5R4O&v=20130307&ll=${this.state.latLong.lat},${this.state.latLong.lng}&radius=100`)
+        .then((response)=>{
+          return response.json();
+         })
+         .then((myJson)=> {
+           console.log(myJson);
+           component.setState({venue:myJson});
+         });
+
+    console.log(this.state.venue);
+  }
+
+  getLatLong = (address) =>{
+    // Get latidude & longitude from address.
+    Geocode.fromAddress(address).then(
+      response => {
+        const { lat, lng } = response.results[0].geometry.location;
+        console.log(lat, lng);
+        let latLong = { lat, lng };
+        console.log(latLong);
+        // this.setState({latLong: latLong});
+        return latLong;
+      },
+      error => {
+        console.error(error);
+      }
+    );
   }
 
   //Received resource assistance from CSS-Tricks @ https://css-tricks.com/forums/topic/clickable-page-links-to-open-markers-on-google-map/
