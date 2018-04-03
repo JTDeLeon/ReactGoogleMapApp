@@ -193,6 +193,23 @@ export class Map extends Component {
             console.log("Marker is still ",marker);
             console.log("Place is still ",place);
 
+            const venuesToCompare = venues.map((arrayItem)=>{
+              console.log(arrayItem.venue.name.toUpperCase());
+              console.log(place.name.toUpperCase())
+              if(arrayItem.venue.name.toUpperCase() === place.name.toUpperCase()){
+                return arrayItem;
+              }
+            })
+
+            const venueMatch = venuesToCompare.filter((item)=>{
+              if(item != undefined)
+                return item;
+            })
+
+            console.log("After Filtered (Venues Array)",venuesToCompare);
+
+            console.log("VenueMatch ",venueMatch);
+
 
           }
           else {
@@ -271,10 +288,10 @@ export class Map extends Component {
     const fsURL = 'https://api.foursquare.com/v2/venues';
     const typeOfSearch = '/explore';
     const version = '20180401'
-    const clientID = 'UYW3NIRUCCX2NKM1SC3JGOXHDKV4JAC432AXQBOSDEQ221NT';
-    const secretID = 'BRRXKGGDAOACSX0BYFZOIGHRJ3X5GTAHDCIIAYY5GUADU4RC'
+    const clientID = 'SMJGNSJFB2FUOEWCEFILZ4COTOCKWMGKLXBM5EHHJD1J5SC5';
+    const secretID = 'DGKUDC5E3PRLTT0APC4U05C2HAACXC3WZGYAUL4ROQUMFF50'
 
-    return fetch(`${fsURL}${typeOfSearch}?client_id=${clientID}&client_secret=${secretID}&v=${version}&ll=${latLong.lat},${latLong.lng}&radius=100`)
+    return fetch(`${fsURL}${typeOfSearch}?client_id=${clientID}&client_secret=${secretID}&v=${version}&ll=${latLong.lat},${latLong.lng}&radius=250`)
         .then((response)=>{
           if (!response.ok) {
             throw response
