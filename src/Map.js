@@ -96,20 +96,20 @@ export class Map extends Component {
 
 
     // Get latidude & longitude from address.
-    Geocode.fromAddress(place.vicinity).then(
+    const latLongPromise = Geocode.fromAddress(place.vicinity).then(
       response => {
         const { lat, lng } = response.results[0].geometry.location;
         console.log(lat, lng);
         let latLong = { lat, lng };
+        return latLong;
         // console.log(latLong);
         // console.log("within the geocode function this is ",this);
-        this.setState({latLong: latLong},()=>{
-
-
-          this.fetchFourSquare();
-
-          console.log(this.state);
-        });
+        // this.setState({latLong: latLong},()=>{
+        //
+        //
+        //
+        //   console.log(this.state);
+        // });
 
         //   // let park;
         //   fetch(`https://api.foursquare.com/v2/venues/explore?client_id=X4OARFL5FZCYC4WGAURB5HXBJELUJJ033LJP0DPKAJNY4D1P&client_secret=ZNY4UTYKDCL10GKLGJGVM13DA2NROCS2RKXR40FPJRTD5R4O&v=20130307&ll=${this.state.latLong.lat},${this.state.latLong.lng}&radius=250`)
@@ -175,7 +175,37 @@ export class Map extends Component {
         console.error(error);
       }
     );
+    console.log("Promise from geocode is ",latLongPromise)
+    latLongPromise.then((latLong)=>{
+      console.log(latLong);
 
+    //Uncomment this step when ready
+      const returnedPromise = this.fetchFourSquare(latLong);
+
+      returnedPromise.then((item)=>{
+        console.log("item is ",item);
+
+        if(item.response.groups && item.response.groups.length > 0){
+          const venues = item.response.groups[0].items;
+          if(venues.length > 0){
+            //Venues are found so we can evaluate
+            console.log("Venues array is ",venues)
+            console.log("Marker is still ",marker);
+            console.log("Place is still ",place);
+
+
+          }
+          else {
+            //Venues are not found and array length is 0
+            console.log("Venues array is EMPTY")
+          }
+
+        }else {
+          //No venues found
+          console.log("no venues found for ", item);
+        }
+      })
+    })
 
     console.log("FROM  Outside Functions");
 
@@ -235,16 +265,35 @@ export class Map extends Component {
     return marker;
   }
 
-  fetchFourSquare = () => {
+  fetchFourSquare = (latLong) => {
     console.log("INSIDE THE CALL BACK funNTION",this.state)
-    let component = this;
-    fetch(`https://api.foursquare.com/v2/venues/explore?client_id=X4OARFL5FZCYC4WGAURB5HXBJELUJJ033LJP0DPKAJNY4D1P&client_secret=ZNY4UTYKDCL10GKLGJGVM13DA2NROCS2RKXR40FPJRTD5R4O&v=20130307&ll=${this.state.latLong.lat},${this.state.latLong.lng}&radius=100`)
+
+    const fsURL = 'https://api.foursquare.com/v2/venues';
+    const typeOfSearch = '/explore';
+    const version = '20180401'
+    const clientID = 'UYW3NIRUCCX2NKM1SC3JGOXHDKV4JAC432AXQBOSDEQ221NT';
+    const secretID = 'BRRXKGGDAOACSX0BYFZOIGHRJ3X5GTAHDCIIAYY5GUADU4RC'
+
+    return fetch(`${fsURL}${typeOfSearch}?client_id=${clientID}&client_secret=${secretID}&v=${version}&ll=${latLong.lat},${latLong.lng}&radius=100`)
         .then((response)=>{
-          return response.json();
+          if (!response.ok) {
+            throw response
+          } else return response.json();
          })
          .then((myJson)=> {
            console.log(myJson);
-           component.setState({venue:myJson});
+           return myJson;
+           // this.setState({venue:myJson},()=>{
+           //   console.log(this.state.venue.response);
+           //   if(this.state.venue.response.groups && this.state.venue.response.groups.length > 0){
+           //     const venues = this.state.venue.response.groups[0].items;
+           //     console.log("Venues array is ",venues)
+           //   }else {
+           //     //No venues found
+           //     console.log("no venues found for ", this.state.venue);
+           //   }
+           //
+           // });
          });
 
     console.log(this.state.venue);
