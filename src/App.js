@@ -16,6 +16,7 @@ class App extends Component {
     listOfParks: []
   }
 
+
   getLatLong(address){
     Geocode.setApiKey("AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao");
 
@@ -57,16 +58,44 @@ class App extends Component {
     this.getLatLong(obj.address);
     this.getDistance(obj.distance);
 
+
+
   }
 
   updateListView(obj) {
     console.log("coming from APP component List View");
     console.log(obj);
+    console.log(this.state.refresh);
     console.log(this.state.listOfParks);
 
-    if(this.state.listOfParks.length != obj.length){
-        this.setState({listOfParks:obj});
-    }
+
+    if(this.state.listOfParks.length !== obj.length){
+      // for(var i = 0; i<obj.length; i++){
+      //   if(this.state.listOfParks[i].id !== obj[i].id){
+          console.log("+++ Inside State +++ ")
+          //@TODO NEED TO FIGURE OUT WHY THIS DOESN"T RUN ON REFRESH OF NEW LOCATION
+          console.log(obj);
+          console.log(this.state.listOfParks);
+          this.setState({listOfParks:obj});
+          console.log(this.state.listOfParks);
+
+        // }
+      }
+      else {
+        for(var i = 0; i<obj.length; i++){
+          if(this.state.listOfParks[i].id !== obj[i].id){
+            console.log("+++ Inside State +++ ")
+            //@TODO NEED TO FIGURE OUT WHY THIS DOESN"T RUN ON REFRESH OF NEW LOCATION
+            console.log(obj);
+            console.log(this.state.listOfParks);
+            this.setState({listOfParks:obj});
+            console.log(this.state.listOfParks);
+          }
+        }
+      }
+
+
+    
 
     console.log(this.state);
 

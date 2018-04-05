@@ -10,7 +10,7 @@ export class Map extends Component {
   state = {
     markers: [],
     listArray: [],
-    parks: []
+    parks: [],
   }
 
   //Will handle updates to the map
@@ -18,6 +18,7 @@ export class Map extends Component {
     console.log("Inside the componentDidUpdate");
     console.log(prevProps);
     console.log(this.props);
+
     if(prevProps != this.props){
       this.loadMap();
       // prevProps = this.props;
@@ -37,6 +38,7 @@ export class Map extends Component {
   }
 
   callback = (results, status) => {
+    console.log("RESULTS FROM CALLBACK",results);
     let resultsArray=[];
     let markers=[];
     if (status === "OK") {
@@ -59,6 +61,9 @@ export class Map extends Component {
       console.log("Markers Array from state is ",this.state)
 
       // window.setTimeout(()=>{
+
+        const resultsObj = {resultsArray,update:true};
+        console.log("results object is ",resultsObj);
         console.log("results Array is ",resultsArray);
         //Send to list view
         this.props.updateListView(resultsArray);
@@ -210,11 +215,101 @@ export class Map extends Component {
 
             console.log("VenueMatch ",venueMatch);
 
+            //If a successful venue match was made
+            if(venueMatch.length > 0) {
+              const venue = venueMatch[0];
+              console.log("CHECKING FOR SCOPE")
+              console.log("Venue within if statement is ",venue);
+              console.log("Marker is still ",marker);
+              console.log("Place is still ",place);
+              let rating;
+              if(venue.venue.rating){
+                rating = venue.venue.rating.toString()+'/10';
+              }else{
+                rating = 'N/A';
+              }
+
+              console.log("Rating is ",rating);
+
+              let url, urlLink;
+              if(venue.venue.url){
+                url = venue.venue.url;
+                urlLink = venue.venue.url;
+              }else{
+                url = 'N/A';
+                urlLink = '#';
+              }
+
+              console.log("URL is ",url);
+
+              //Set Info Window
+              let infowindow = new this.props.google.maps.InfoWindow();
+              let opened = '';
+              if(place.opening_hours){
+                // console.log("Opening hours are ",place.opening_hours.open_now)
+                if(place.opening_hours.open_now){
+                  opened = '<h3 style="color:green">Yes!</h3>';
+                }else{
+                  opened = '<h4 style="color:red">No...</h4>';
+                }
+              }else{
+                opened = 'N/A';
+              }
+
+              this.props.google.maps.event.addListener(marker, 'click', () => {
+                marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+                infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p><p>Rating: ${rating}</p><p>URL: <a href=${urlLink}>${url}</a></p>`);
+                infowindow.open(this.map, marker);
+              });
+
+
+            }
+            else {
+              //Set info window data as N/A as we didn't find a match
+              //Set Info Window
+              let infowindow = new this.props.google.maps.InfoWindow();
+              let opened = '';
+              if(place.opening_hours){
+                // console.log("Opening hours are ",place.opening_hours.open_now)
+                if(place.opening_hours.open_now){
+                  opened = '<h3 style="color:green">Yes!</h3>';
+                }else{
+                  opened = '<h4 style="color:red">No...</h4>';
+                }
+              }else{
+                opened = 'N/A';
+              }
+
+              this.props.google.maps.event.addListener(marker, 'click', () => {
+                marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+                infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p><p>Rating: N/A</p><p>URL: N/A</p>`);
+                infowindow.open(this.map, marker);
+              });
+            }
 
           }
           else {
             //Venues are not found and array length is 0
             console.log("Venues array is EMPTY")
+            //Set Info Window
+            let infowindow = new this.props.google.maps.InfoWindow();
+            let opened = '';
+            if(place.opening_hours){
+              // console.log("Opening hours are ",place.opening_hours.open_now)
+              if(place.opening_hours.open_now){
+                opened = '<h3 style="color:green">Yes!</h3>';
+              }else{
+                opened = '<h4 style="color:red">No...</h4>';
+              }
+            }else{
+              opened = 'N/A';
+            }
+
+            this.props.google.maps.event.addListener(marker, 'click', () => {
+              marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+              infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p><p>Rating: N/A</p><p>URL: N/A</p>`);
+              infowindow.open(this.map, marker);
+            });
           }
 
         }else {
@@ -228,24 +323,24 @@ export class Map extends Component {
 
 
 
-    let infowindow = new this.props.google.maps.InfoWindow();
-    let opened = '';
-    if(place.opening_hours){
-      // console.log("Opening hours are ",place.opening_hours.open_now)
-      if(place.opening_hours.open_now){
-        opened = '<h3 style="color:green">Yes!</h3>';
-      }else{
-        opened = '<h4 style="color:red">No...</h4>';
-      }
-    }else{
-      opened = 'N/A';
-    }
+    // let infowindow = new this.props.google.maps.InfoWindow();
+    // let opened = '';
+    // if(place.opening_hours){
+    //   // console.log("Opening hours are ",place.opening_hours.open_now)
+    //   if(place.opening_hours.open_now){
+    //     opened = '<h3 style="color:green">Yes!</h3>';
+    //   }else{
+    //     opened = '<h4 style="color:red">No...</h4>';
+    //   }
+    // }else{
+    //   opened = 'N/A';
+    // }
 
-    let park;
-    console.log("Before Fetch:")
-    console.log("this is ",this);
-    const stateTemp = this;
-    console.log('state is ',stateTemp.state);
+    // let park;
+    // console.log("Before Fetch:")
+    // console.log("this is ",this);
+    // const stateTemp = this;
+    // console.log('state is ',stateTemp.state);
 
     // fetch(`https://api.foursquare.com/v2/venues/explore?client_id=X4OARFL5FZCYC4WGAURB5HXBJELUJJ033LJP0DPKAJNY4D1P&client_secret=ZNY4UTYKDCL10GKLGJGVM13DA2NROCS2RKXR40FPJRTD5R4O&v=20130307&ll=${this.state.latLong.lat},${this.state.latLong.lng}&radius=250`)
     //   .then((response)=>{
@@ -273,11 +368,11 @@ export class Map extends Component {
     //      console.log("ERROR",err);
     //    });
 
-    this.props.google.maps.event.addListener(marker, 'click', () => {
-      marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
-      infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p><p>Rating: /10</p>`);
-      infowindow.open(this.map, marker);
-    });
+    // this.props.google.maps.event.addListener(marker, 'click', () => {
+    //   marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+    //   infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p><p>Rating: /10</p>`);
+    //   infowindow.open(this.map, marker);
+    // });
 
     return marker;
   }
@@ -288,8 +383,8 @@ export class Map extends Component {
     const fsURL = 'https://api.foursquare.com/v2/venues';
     const typeOfSearch = '/explore';
     const version = '20180401'
-    const clientID = 'SMJGNSJFB2FUOEWCEFILZ4COTOCKWMGKLXBM5EHHJD1J5SC5';
-    const secretID = 'DGKUDC5E3PRLTT0APC4U05C2HAACXC3WZGYAUL4ROQUMFF50'
+    const clientID = 'SJMEQ41RWVL53VNN4TVF2O2S24RJNGNYVTEMES3X2ZTWTLJJ';
+    const secretID = '40D5D0IWMCNRQR5GW4PU4ZJZLV2QDZTE4CHWKYRGAS5MBLNE'
 
     return fetch(`${fsURL}${typeOfSearch}?client_id=${clientID}&client_secret=${secretID}&v=${version}&ll=${latLong.lat},${latLong.lng}&radius=250`)
         .then((response)=>{
