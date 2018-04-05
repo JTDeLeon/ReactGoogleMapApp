@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Geocode from "react-geocode";
+// import Geocode from "react-geocode";
 import DetailsBar from './DetailsBar'
 import Container from './Container'
 import './App.css';
@@ -18,56 +18,56 @@ class App extends Component {
 
 
   getLatLong(address){
-    // const apiKey = 'AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao';
-    // const formattedAddress = address.split(' ').join('+');
-    // const preURL = 'https://maps.googleapis.com/maps/api/geocode/json?';
+    const apiKey = 'AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao';
+    const formattedAddress = address.split(' ').join('+');
+    const preURL = 'https://maps.googleapis.com/maps/api/geocode/json?';
+
+
+    const formattedURL = `${preURL}address=${formattedAddress}&key=${apiKey}`
+    console.log("fetch url is ",formattedURL);
+
+    fetch(formattedURL)
+      .then((response)=>{
+        console.log("Success")
+        console.log(response)
+        return response.json()
+      })
+      .then((myJSON)=>{
+        console.log("My JSON is ",myJSON);
+        const toPassIntoState = myJSON.results[0].geometry.location;
+        console.log(toPassIntoState)
+        this.setState({location:toPassIntoState})
+      })
+      .catch((err)=>{
+        console.log("Failed")
+        console.log(err)
+      });
+
+    // Geocode.setApiKey("AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao");
     //
+    // // Get latidude & longitude from address.
+    // Geocode.fromAddress(address).then(
+    //   response => {
+    //     const { lat, lng } = response.results[0].geometry.location;
+    //     console.log(lat, lng);
+    //     console.log(lat);
+    //     console.log(lng);
     //
-    // const formattedURL = `${preURL}address=${formattedAddress}&key=${apiKey}`
-    // console.log("fetch url is ",formattedURL);
+    //     let newLocation = this.state.location;
+    //     console.log("OLD Location",newLocation);
     //
-    // fetch(formattedURL)
-    //   .then((response)=>{
-    //     console.log("Success")
-    //     console.log(response)
-    //     return response.json()
-    //   })
-    //   .then((myJSON)=>{
-    //     console.log("My JSON is ",myJSON);
-    //     const toPassIntoState = myJSON.results[0].geometry.location;
-    //     console.log(toPassIntoState)
-    //     this.setState({location:toPassIntoState})
-    //   })
-    //   .catch((err)=>{
-    //     console.log("Failed")
-    //     console.log(err)
-    //   });
-
-    Geocode.setApiKey("AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao");
-
-    // Get latidude & longitude from address.
-    Geocode.fromAddress(address).then(
-      response => {
-        const { lat, lng } = response.results[0].geometry.location;
-        console.log(lat, lng);
-        console.log(lat);
-        console.log(lng);
-
-        let newLocation = this.state.location;
-        console.log("OLD Location",newLocation);
-
-        newLocation.lat = lat;
-        newLocation.lng = lng;
-        console.log("NEW Location",newLocation);
-        this.setState({location:newLocation})
-
-        console.log(this.state);
-
-      },
-      error => {
-        console.error(error);
-      }
-    );
+    //     newLocation.lat = lat;
+    //     newLocation.lng = lng;
+    //     console.log("NEW Location",newLocation);
+    //     this.setState({location:newLocation})
+    //
+    //     console.log(this.state);
+    //
+    //   },
+    //   error => {
+    //     console.error(error);
+    //   }
+    // );
   }
 
 

@@ -16,7 +16,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "devDependencies": {
-    "react-geocode": "0.0.7"
-  }
+  "devDependencies": {}
 }

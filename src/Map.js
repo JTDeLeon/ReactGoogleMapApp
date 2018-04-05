@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import Geocode from "react-geocode";
+// import Geocode from "react-geocode";
 import ListView from './ListView'
 
 //Component set up with the help a couple articles on :   https://www.fullstackreact.com/articles/how-to-write-a-google-maps-react-component/ & https://medium.com/front-end-hacking/using-the-google-maps-javascript-api-in-a-react-project-b3ed734375c6
@@ -101,85 +101,7 @@ export class Map extends Component {
 
 
     // Get latidude & longitude from address.
-    const latLongPromise = Geocode.fromAddress(place.vicinity).then(
-      response => {
-        const { lat, lng } = response.results[0].geometry.location;
-        console.log(lat, lng);
-        let latLong = { lat, lng };
-        return latLong;
-        // console.log(latLong);
-        // console.log("within the geocode function this is ",this);
-        // this.setState({latLong: latLong},()=>{
-        //
-        //
-        //
-        //   console.log(this.state);
-        // });
-
-        //   // let park;
-        //   fetch(`https://api.foursquare.com/v2/venues/explore?client_id=X4OARFL5FZCYC4WGAURB5HXBJELUJJ033LJP0DPKAJNY4D1P&client_secret=ZNY4UTYKDCL10GKLGJGVM13DA2NROCS2RKXR40FPJRTD5R4O&v=20130307&ll=${this.state.latLong.lat},${this.state.latLong.lng}&radius=250`)
-        //     .then((response)=>{
-        //       return response.json();
-        //      })
-        //      .then((myJson)=> {
-        //        console.log(myJson);
-        //        console.log(myJson.response.groups[0].items.forEach((parkItem)=>{
-        //          console.log(parkItem)
-        //          if(parkItem.venue.name.includes(place.name)){
-        //            console.log("4square Match is found! !")
-        //            console.log(parkItem.venue)
-        //            console.log("THIS IS SET TO ",this);
-        //            // window.park.push(parkItem.venue);
-        //            // park = parkItem.venue;
-        //            this.setState({parks:parkItem.venue},()=>{
-        //              console.log("Parks is set in state",this.state.parks);
-        //
-        //              let infowindow = new this.props.google.maps.InfoWindow();
-        //              let opened = '';
-        //              if(place.opening_hours){
-        //                // console.log("Opening hours are ",place.opening_hours.open_now)
-        //                if(place.opening_hours.open_now){
-        //                  opened = '<h3 style="color:green">Yes!</h3>';
-        //                }else{
-        //                  opened = '<h4 style="color:red">No...</h4>';
-        //                }
-        //              }else{
-        //                opened = 'N/A';
-        //              }
-        //
-        //              console.log("Opened is : ",opened);
-        //              console.log("This is ",this)
-        //              console.log("parks is (in state) : ",this.state.parks);
-        //              console.log("Marker is ", marker);
-        //
-        //              this.props.google.maps.event.addListener(marker, 'click', () => {
-        //                marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
-        //                infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p><p>Rating: ${this.state.parks.rating}/10</p>`);
-        //                infowindow.open(this.map, marker);
-        //              });
-        //
-        //            })
-        //            // console.log("THIS STATE IS SET TO ",this.state);
-        //            // console.log(window.park);
-        //          }else {
-        //            console.log("Match is not found")
-        //          }
-        //        }))
-        //
-        //        console.log("FROM PARK ARRAY",window.park);
-        //      })
-        //      .catch((err)=>{
-        //        console.log("ERROR",err);
-        //      });
-        //
-        // });
-        // return latLong;
-
-      },
-      error => {
-        console.error(error);
-      }
-    );
+    const latLongPromise = this.getLatLong(place.vicinity)
     console.log("Promise from geocode is ",latLongPromise)
     latLongPromise.then((latLong)=>{
       console.log(latLong);
@@ -412,20 +334,45 @@ export class Map extends Component {
   }
 
   getLatLong = (address) =>{
+    const apiKey = 'AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao';
+    const formattedAddress = address.split(' ').join('+');
+    const preURL = 'https://maps.googleapis.com/maps/api/geocode/json?';
+
+
+    const formattedURL = `${preURL}address=${formattedAddress}&key=${apiKey}`
+    console.log("fetch url is ",formattedURL);
+
+    return fetch(formattedURL)
+      .then((response)=>{
+        console.log("Success")
+        console.log(response)
+        return response.json()
+      })
+      .then((myJSON)=>{
+        console.log("My JSON is ",myJSON);
+        const toPassIntoState = myJSON.results[0].geometry.location;
+        return toPassIntoState;
+        // this.setState({location:toPassIntoState})
+      })
+      .catch((err)=>{
+        console.log("Failed")
+        console.log(err)
+      });
+
     // Get latidude & longitude from address.
-    Geocode.fromAddress(address).then(
-      response => {
-        const { lat, lng } = response.results[0].geometry.location;
-        console.log(lat, lng);
-        let latLong = { lat, lng };
-        console.log(latLong);
-        // this.setState({latLong: latLong});
-        return latLong;
-      },
-      error => {
-        console.error(error);
-      }
-    );
+    // Geocode.fromAddress(address).then(
+    //   response => {
+    //     const { lat, lng } = response.results[0].geometry.location;
+    //     console.log(lat, lng);
+    //     let latLong = { lat, lng };
+    //     console.log(latLong);
+    //     // this.setState({latLong: latLong});
+    //     return latLong;
+    //   },
+    //   error => {
+    //     console.error(error);
+    //   }
+    // );
   }
 
   //Received resource assistance from CSS-Tricks @ https://css-tricks.com/forums/topic/clickable-page-links-to-open-markers-on-google-map/
