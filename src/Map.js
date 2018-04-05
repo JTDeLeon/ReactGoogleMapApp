@@ -383,8 +383,8 @@ export class Map extends Component {
     const fsURL = 'https://api.foursquare.com/v2/venues';
     const typeOfSearch = '/explore';
     const version = '20180401'
-    const clientID = 'SJMEQ41RWVL53VNN4TVF2O2S24RJNGNYVTEMES3X2ZTWTLJJ';
-    const secretID = '40D5D0IWMCNRQR5GW4PU4ZJZLV2QDZTE4CHWKYRGAS5MBLNE'
+    const clientID = 'YZHHZIKV5C143SC01Z4DOZQOAM0FGONDF3KCACDBMF5TCFYT';
+    const secretID = 'GPOJFAF3YQE10AQLUGKQOK4H50EBLXQJDKYKZV5JDKFCDDWX'
 
     return fetch(`${fsURL}${typeOfSearch}?client_id=${clientID}&client_secret=${secretID}&v=${version}&ll=${latLong.lat},${latLong.lng}&radius=250`)
         .then((response)=>{

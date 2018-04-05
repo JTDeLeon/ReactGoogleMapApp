@@ -18,6 +18,31 @@ class App extends Component {
 
 
   getLatLong(address){
+    // const apiKey = 'AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao';
+    // const formattedAddress = address.split(' ').join('+');
+    // const preURL = 'https://maps.googleapis.com/maps/api/geocode/json?';
+    //
+    //
+    // const formattedURL = `${preURL}address=${formattedAddress}&key=${apiKey}`
+    // console.log("fetch url is ",formattedURL);
+    //
+    // fetch(formattedURL)
+    //   .then((response)=>{
+    //     console.log("Success")
+    //     console.log(response)
+    //     return response.json()
+    //   })
+    //   .then((myJSON)=>{
+    //     console.log("My JSON is ",myJSON);
+    //     const toPassIntoState = myJSON.results[0].geometry.location;
+    //     console.log(toPassIntoState)
+    //     this.setState({location:toPassIntoState})
+    //   })
+    //   .catch((err)=>{
+    //     console.log("Failed")
+    //     console.log(err)
+    //   });
+
     Geocode.setApiKey("AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao");
 
     // Get latidude & longitude from address.
@@ -44,6 +69,8 @@ class App extends Component {
       }
     );
   }
+
+
 
   getDistance(miles){
     const meters = Math.ceil(miles*1609.344);
@@ -95,7 +122,7 @@ class App extends Component {
       }
 
 
-    
+
 
     console.log(this.state);
 
