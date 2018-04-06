@@ -31,9 +31,9 @@ class FilterMarkers extends Component {
   render() {
     return (
       <div role='search'>
-        <h2 id="filterTitle">Search For Parks In Orlando</h2>
+        <h2 id="filterTitle">Search For Parks Near You</h2>
         <form>
-          <label for="distance">Distance: </label>
+          <label htmlFor="distance">Distance: </label>
           <br/>
           <select
             id="distance"
@@ -48,7 +48,7 @@ class FilterMarkers extends Component {
           <br/>
 
 
-          <label for="location">From: </label>
+          <label htmlFor="location">From: </label>
           <br/>
           <input
             id="location"

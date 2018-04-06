@@ -5,6 +5,7 @@
   width: 100%;
   padding: 10px;
   border-radius: 20px;
+
 }
 
 .title {
@@ -17,17 +18,21 @@
   background-color: green;
   display: flex;
   border-radius: 20px 20px 0 0;
+  color: white;
+  box-shadow: 4px 4px #D3D3D3;
 }
 
 .filterArea {
   height: 30vh;
   background-color: white;
+  box-shadow: 4px 4px #D3D3D3;
 }
 
 .listViewArea {
   height: 60vh;
   background-color: white;
   border-radius: 0 0 20px 20px;
+  box-shadow: 4px 4px #D3D3D3;
 }
 
 footer {
