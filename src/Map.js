@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { MAP_KEY, CLIENT_ID , CLIENT_SECRET } from './Credentials';
 // import Geocode from "react-geocode";
 import ListView from './ListView'
 
@@ -242,58 +243,6 @@ export class Map extends Component {
     console.log("FROM  Outside Functions");
 
 
-
-    // let infowindow = new this.props.google.maps.InfoWindow();
-    // let opened = '';
-    // if(place.opening_hours){
-    //   // console.log("Opening hours are ",place.opening_hours.open_now)
-    //   if(place.opening_hours.open_now){
-    //     opened = '<h3 style="color:green">Yes!</h3>';
-    //   }else{
-    //     opened = '<h4 style="color:red">No...</h4>';
-    //   }
-    // }else{
-    //   opened = 'N/A';
-    // }
-
-    // let park;
-    // console.log("Before Fetch:")
-    // console.log("this is ",this);
-    // const stateTemp = this;
-    // console.log('state is ',stateTemp.state);
-
-    // fetch(`https://api.foursquare.com/v2/venues/explore?client_id=X4OARFL5FZCYC4WGAURB5HXBJELUJJ033LJP0DPKAJNY4D1P&client_secret=ZNY4UTYKDCL10GKLGJGVM13DA2NROCS2RKXR40FPJRTD5R4O&v=20130307&ll=${this.state.latLong.lat},${this.state.latLong.lng}&radius=250`)
-    //   .then((response)=>{
-    //     return response.json();
-    //    })
-    //    .then((myJson)=> {
-    //      console.log(myJson);
-    //      console.log(myJson.response.groups[0].items.forEach((parkItem)=>{
-    //        console.log(parkItem)
-    //        if(parkItem.venue.name == place.name){
-    //          console.log("4square Match is found! !")
-    //          console.log(parkItem.venue)
-    //          console.log("THIS IS SET TO ",this);
-    //          // window.park.push(parkItem.venue);
-    //          park = parkItem.venue;
-    //          // this.setState({parks:parkItem.venue})
-    //          // console.log("THIS STATE IS SET TO ",this.state);
-    //          // console.log(window.park);
-    //        }
-    //      }))
-    //
-    //      console.log("FROM PARK ARRAY",window.park);
-    //    })
-    //    .catch((err)=>{
-    //      console.log("ERROR",err);
-    //    });
-
-    // this.props.google.maps.event.addListener(marker, 'click', () => {
-    //   marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
-    //   infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p><p>Rating: /10</p>`);
-    //   infowindow.open(this.map, marker);
-    // });
-
     return marker;
   }
 
@@ -303,8 +252,8 @@ export class Map extends Component {
     const fsURL = 'https://api.foursquare.com/v2/venues';
     const typeOfSearch = '/explore';
     const version = '20180401'
-    const clientID = 'M3DAO5AIJORTLELGRLTF5ZJFKNXCQSOMNSEKRJZO1YER2G0S';
-    const secretID = 'KGRFS2G0HKCIVA0OAEOIIMP32D3SUJUF2NZ3ESBXWVJLLELD'
+    const clientID = CLIENT_ID;
+    const secretID = CLIENT_SECRET;
 
     return fetch(`${fsURL}${typeOfSearch}?client_id=${clientID}&client_secret=${secretID}&v=${version}&ll=${latLong.lat},${latLong.lng}&radius=250`)
         .then((response)=>{
@@ -336,7 +285,7 @@ export class Map extends Component {
   }
 
   getLatLong = (address) =>{
-    const apiKey = 'AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao';
+    const apiKey = MAP_KEY;
     const formattedAddress = address.split(' ').join('+');
     const preURL = 'https://maps.googleapis.com/maps/api/geocode/json?';
 

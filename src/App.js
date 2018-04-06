@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 // import Geocode from "react-geocode";
+import { MAP_KEY } from './Credentials';
 import DetailsBar from './DetailsBar'
 import Container from './Container'
 import './App.css';
@@ -18,7 +19,7 @@ class App extends Component {
 
 
   getLatLong(address){
-    const apiKey = 'AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao';
+    const apiKey = MAP_KEY;
     const formattedAddress = address.split(' ').join('+');
     const preURL = 'https://maps.googleapis.com/maps/api/geocode/json?';
 
