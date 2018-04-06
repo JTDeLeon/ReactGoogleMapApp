@@ -29,10 +29,11 @@ class FilterMarkers extends Component {
 
   render() {
     return (
-      <div>
+      <div role='search'>
         <h2>Search For Parks In Orlando</h2>
         <form>
-
+          <label for="distance">Distance: </label>
+          <br/>
           <select
             id="distance"
           >
@@ -43,14 +44,15 @@ class FilterMarkers extends Component {
           </select>
 
           <br/>
-          <span>From:</span>
           <br/>
 
 
+          <label for="location">From: </label>
+          <br/>
           <input
             id="location"
             type="address"
-            placeholder="Insert Your Address Here"
+            placeholder="Insert Your Address"
             onChange={this.handleChange}
           ></input>
 

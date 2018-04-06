@@ -34,6 +34,11 @@ class App extends Component {
       })
       .then((myJSON)=>{
         console.log("My JSON is ",myJSON);
+        if(myJSON.status === 'REQUEST_DENIED'){
+          throw Error;
+          return;
+        }
+
         const toPassIntoState = myJSON.results[0].geometry.location;
         console.log(toPassIntoState)
         this.setState({location:toPassIntoState})
@@ -41,7 +46,11 @@ class App extends Component {
       .catch((err)=>{
         console.log("Failed")
         console.log(err)
-      });
+        //Notifies user that the API key may be the problem.
+        // if(!document.querySelector('#error'))
+          document.querySelector('#root').insertAdjacentHTML('beforebegin',"<h3 id='error' style='color:red'>Error Fetching Google Maps Data: Please check your internet connection & ensure that your Google Maps API key is properly set and try again.</h3>")
+       throw err;
+     });
 
     // Geocode.setApiKey("AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao");
     //

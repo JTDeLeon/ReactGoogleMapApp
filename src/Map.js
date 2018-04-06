@@ -77,8 +77,6 @@ export class Map extends Component {
       }
 
 
-      document.getElementById('hide-listings').addEventListener('click', this.hideListings);
-
     }
     else {
       console.log("Error has occured")
@@ -305,8 +303,8 @@ export class Map extends Component {
     const fsURL = 'https://api.foursquare.com/v2/venues';
     const typeOfSearch = '/explore';
     const version = '20180401'
-    const clientID = 'YZHHZIKV5C143SC01Z4DOZQOAM0FGONDF3KCACDBMF5TCFYT';
-    const secretID = 'GPOJFAF3YQE10AQLUGKQOK4H50EBLXQJDKYKZV5JDKFCDDWX'
+    const clientID = 'M3DAO5AIJORTLELGRLTF5ZJFKNXCQSOMNSEKRJZO1YER2G0S';
+    const secretID = 'KGRFS2G0HKCIVA0OAEOIIMP32D3SUJUF2NZ3ESBXWVJLLELD'
 
     return fetch(`${fsURL}${typeOfSearch}?client_id=${clientID}&client_secret=${secretID}&v=${version}&ll=${latLong.lat},${latLong.lng}&radius=250`)
         .then((response)=>{
@@ -317,17 +315,21 @@ export class Map extends Component {
          .then((myJson)=> {
            console.log(myJson);
            return myJson;
-           // this.setState({venue:myJson},()=>{
-           //   console.log(this.state.venue.response);
-           //   if(this.state.venue.response.groups && this.state.venue.response.groups.length > 0){
-           //     const venues = this.state.venue.response.groups[0].items;
-           //     console.log("Venues array is ",venues)
-           //   }else {
-           //     //No venues found
-           //     console.log("no venues found for ", this.state.venue);
-           //   }
-           //
-           // });
+         })
+         .catch((err)=>{
+           //alert("Error happened when fetching from FourSquare",err);
+           if(!document.querySelector('#error')){
+
+
+             if(err.status === 429){
+               document.querySelector('#root').insertAdjacentHTML('beforebegin',"<h3 id='error' style='color:red'>Error Fetching FourSquare Data: You have exceeded the API query limit, please try again with a fresh FourSquare client & secret key credentials.</h3>")
+               throw err;
+             }
+             else{
+               document.querySelector('#root').insertAdjacentHTML('beforebegin',"<h3 id='error' style='color:red'>Error Fetching FourSquare Data: Please check your internet connection & ensure that your client/secret key is properly set and try again.</h3>")
+             }
+           }
+           throw err;
          });
 
     console.log(this.state.venue);
@@ -350,6 +352,10 @@ export class Map extends Component {
       })
       .then((myJSON)=>{
         console.log("My JSON is ",myJSON);
+        if(myJSON.status === 'REQUEST_DENIED'){
+          throw Error;
+          return;
+        }
         const toPassIntoState = myJSON.results[0].geometry.location;
         return toPassIntoState;
         // this.setState({location:toPassIntoState})
@@ -357,7 +363,11 @@ export class Map extends Component {
       .catch((err)=>{
         console.log("Failed")
         console.log(err)
-      });
+        //Notifies user that the API key may be the problem.
+        // if(!document.querySelector('#error'))
+          document.querySelector('#root').insertAdjacentHTML('beforebegin',"<h3 id='error' style='color:red'>Error Fetching Google Maps Data: Please check your internet connection & ensure that your Google Maps API key is properly set and try again.</h3>")
+       throw err;
+     });
 
     // Get latidude & longitude from address.
     // Geocode.fromAddress(address).then(
@@ -463,9 +473,9 @@ export class Map extends Component {
     }
 
     return (
-      <div ref="map" style={style}>
+      <main role="application" ref="map" style={style}>
         loading map...
-      </div>
+      </main>
     )
 
 

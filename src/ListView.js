@@ -10,12 +10,7 @@ class ListView extends Component {
 
     let count = 0;
     return (
-      <div>
-        <div>
-          <input id="show-listings" type="button" value="Show Listings" />
-          <input id="hide-listings" type="button" value="Hide Listings" />
-        </div>
-
+      <div role="complementary">
         <h2>THIS IS ListView</h2>
         <ul id="list">
           {this.props.parks.forEach((park)=>{

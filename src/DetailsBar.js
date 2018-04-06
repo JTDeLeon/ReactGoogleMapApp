@@ -18,9 +18,9 @@ class DetailsBar extends Component {
     // console.log("IN DETAILS BAR PROPS IS ",this.props)
     return (
       <div className="sideBar">
-        <div className="header">
+        <header className="header">
           <h1 className="title">Orlando Parks Map!</h1>
-        </div>
+        </header>
 
         <div className="filterArea">
           <FilterMarkers
