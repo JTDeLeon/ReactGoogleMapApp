@@ -34,7 +34,13 @@ class DetailsBar extends Component {
           <ListView
             parks={this.props.parks}
           />
+          <footer>
+            <p>Created by: Jonathan Deleon, Apr 2018.</p>
+            <p>Data Provided By: Google Maps & FourSquare</p>
+          </footer>
         </div>
+
+
 
 
       </div>

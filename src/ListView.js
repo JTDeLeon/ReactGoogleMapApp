@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './ListView.css'
 
 class ListView extends Component {
 
@@ -11,7 +12,7 @@ class ListView extends Component {
     let count = 0;
     return (
       <div role="complementary">
-        <h2>THIS IS ListView</h2>
+        <h2 id="list-view-title">List View:</h2>
         <ul id="list">
           {this.props.parks.forEach((park)=>{
             count++;

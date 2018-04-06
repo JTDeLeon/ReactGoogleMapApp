@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './FilterMarkers.css'
 
 class FilterMarkers extends Component {
 
@@ -30,7 +31,7 @@ class FilterMarkers extends Component {
   render() {
     return (
       <div role='search'>
-        <h2>Search For Parks In Orlando</h2>
+        <h2 id="filterTitle">Search For Parks In Orlando</h2>
         <form>
           <label for="distance">Distance: </label>
           <br/>

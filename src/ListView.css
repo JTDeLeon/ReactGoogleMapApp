@@ -1,0 +1,21 @@
+#list-view-title {
+  color: black;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin: 15px 20px 0 20px ;
+}
+
+#list {
+  /* margin: 5px 0; */
+  margin: 5px 20px 0 20px;
+  padding:10px 0;
+  border: 1px solid black;
+  list-style-type: none;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+#list li {
+  color: blue;
+  padding: 1px 0 0 0;
+}
