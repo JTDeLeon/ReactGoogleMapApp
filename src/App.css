@@ -9,7 +9,7 @@
 .details_Bar {
   background-color: grey;
   width: 30%;
-  height: 100vh;
+  /* height: 100vh; */
   display: flex;
 }
 
@@ -17,4 +17,28 @@
   background-color: red;
   width: 70%;
   height: 100vh;
+
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  .App {
+    flex-direction: column;
+  }
+
+  .details_Bar {
+    background-color: grey;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+
+  }
+
+  .map {
+    background-color: red;
+    width: 100%;
+    height: 70vh;
+    position: absolute;
+    margin-top: 665px;
+  }
 }

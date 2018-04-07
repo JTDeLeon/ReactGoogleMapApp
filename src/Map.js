@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import MediaQuery from 'react-responsive';
 import { MAP_KEY, CLIENT_ID , CLIENT_SECRET } from './Credentials';
 // import Geocode from "react-geocode";
 import ListView from './ListView'
@@ -416,15 +417,34 @@ export class Map extends Component {
   }
 
   render() {
-    const style = {
-      width: '70vw',
-      height: '100vh'
-    }
+
+    // const style = {
+    //   width: '70vw',
+    //   height: '100vh'
+    // }
 
     return (
-      <main role="application" ref="map" style={style}>
-        loading map...
-      </main>
+      <div>
+        <MediaQuery query="(max-device-width: 1224px)">
+          <main id="map-main" role="application" ref="map" style={{width: '100%',height: '100vh'}}>
+            loading map...
+          </main>
+        </MediaQuery>
+
+        {/* <MediaQuery         query="(min-device-width: 426px)"
+        query="(max-device-width: 1224px)"
+          >
+          <main id="map-main" role="application" ref="map" style={{width: '70vw',height: '100vh'}}>
+            loading map...
+          </main>
+        </MediaQuery> */}
+
+        <MediaQuery query="(min-device-width: 1225px)">
+          <main id="map-main" role="application" ref="map" style={{width: '100%',height: '100vh'}}>
+            loading map...
+          </main>
+        </MediaQuery>
+      </div>
     )
 
 

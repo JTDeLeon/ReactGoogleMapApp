@@ -2,6 +2,14 @@
   color:black;
 }
 
+input {
+  border: 1px solid black;
+}
+
+select {
+  border: 1px solid black;
+}
+
 #location {
   text-align: center;
 }
@@ -13,4 +21,10 @@ button {
   color: white;
   border-radius: 10px;
   border: 1px solid black;
+}
+
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+
 }
