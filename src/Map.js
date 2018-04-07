@@ -3,10 +3,8 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import { MAP_KEY, CLIENT_ID , CLIENT_SECRET } from './Credentials';
-// import Geocode from "react-geocode";
-import ListView from './ListView'
 
-//Component set up with the help a couple articles on :   https://www.fullstackreact.com/articles/how-to-write-a-google-maps-react-component/ & https://medium.com/front-end-hacking/using-the-google-maps-javascript-api-in-a-react-project-b3ed734375c6
+//Component set up with the aid of a couple articles :   https://www.fullstackreact.com/articles/how-to-write-a-google-maps-react-component/ &   https://medium.com/front-end-hacking/using-the-google-maps-javascript-api-in-a-react-project-b3ed734375c6
 export class Map extends Component {
 
   state = {
@@ -17,68 +15,42 @@ export class Map extends Component {
 
   //Will handle updates to the map
   componentDidUpdate(prevProps, prevState) {
-    console.log("Inside the componentDidUpdate");
-    console.log(prevProps);
-    console.log(this.props);
-
-    if(prevProps != this.props){
+    if(prevProps !== this.props){
       this.loadMap();
-      // prevProps = this.props;
     }
     else {
-      console.log("Not loading map from update comp")
-      // return
+      // console.log("Not loading map from update comp")
     }
-
-
   }
 
-  //Will handle inital load
+  //Will handle inital load of map
   componentDidMount(){
-    console.log("Inside the componentDidMound");
     this.loadMap();
   }
 
+  //Callback function after the Google API has returned with data
   callback = (results, status) => {
-    console.log("RESULTS FROM CALLBACK",results);
     let resultsArray=[];
     let markers=[];
     if (status === "OK") {
       for (var i = 0; i < results.length; i++) {
-      markers.push(this.createMarker(results[i]));
-      //Just gather 5 of the parks
-      // if(resultsArray.length<5){
-      //   //Ratings > 4 will be included
-      //   if(results[i].rating > 4){
-          //create array that will send to list view
-          resultsArray.push(results[i]);
-
-      //   }
-      //
-      // }
-
+        //Create the markers for the map
+        markers.push(this.createMarker(results[i]));
+        //Send to a workable array
+        resultsArray.push(results[i]);
       }
-      console.log("Markers Array is ",markers);
+      //Sets all the markers in the state to be used
       this.setState({markers:markers})
-      console.log("Markers Array from state is ",this.state)
 
-      // window.setTimeout(()=>{
+      //Send list of parks in the map to App so it can be rendered in list view component
+      this.props.updateListView(resultsArray);
+      //Sets state of parks that are on the map
+      this.setState({listArray:resultsArray});
 
-        const resultsObj = {resultsArray,update:true};
-        console.log("results object is ",resultsObj);
-        console.log("results Array is ",resultsArray);
-        //Send to list view
-        this.props.updateListView(resultsArray);
-        this.setState({listArray:resultsArray});
-        console.log("ListArray From State is ",resultsArray)
-
-      // },2000);
-
+      //Adds event listeners to each of the list view items
       for(let x = 1; x <= resultsArray.length; x++){
         document.getElementById('park-'+x).addEventListener('click', this.showParkInfo);
       }
-
-
     }
     else {
       console.log("Error has occured")
@@ -86,64 +58,45 @@ export class Map extends Component {
     }
   }
 
+  //Function to create the markers for the map
   createMarker = (place) => {
-    console.log("WITHIN CREATE MARKER, place is ",place);
     var placeLoc = place.geometry.location;
     var marker = new this.props.google.maps.Marker({
       map: this.map,
       position: placeLoc
     });
 
-    console.log("<<Handling FourSquare>>")
-    //Handle FourSquare
-    // console.log(this.getLatLong(place.vicinity));
-    // console.log("From inside STATE",this.state.latLong);
-
-
-    // Get latidude & longitude from address.
+    // Get latidude & longitude from google map api address.
     const latLongPromise = this.getLatLong(place.vicinity)
-    console.log("Promise from geocode is ",latLongPromise)
     latLongPromise.then((latLong)=>{
-      console.log(latLong);
-
-    //Uncomment this step when ready
+      //Create a fetch to the FourSquare API and returns usable JSON response into a promise
       const returnedPromise = this.fetchFourSquare(latLong);
 
+      //Parse the returned promise
       returnedPromise.then((item)=>{
-        console.log("item is ",item);
-
+        //If venues exist and 1 or more venues are found
         if(item.response.groups && item.response.groups.length > 0){
           const venues = item.response.groups[0].items;
+          //Venues are found so we can evaluate
           if(venues.length > 0){
-            //Venues are found so we can evaluate
-            console.log("Venues array is ",venues)
-            console.log("Marker is still ",marker);
-            console.log("Place is still ",place);
-
+            //Checks for the name matches with case insensitive checks and returns a new array with our matches between google api and FourSquare api results
             const venuesToCompare = venues.map((arrayItem)=>{
-              console.log(arrayItem.venue.name.toUpperCase());
-              console.log(place.name.toUpperCase())
               if(arrayItem.venue.name.toUpperCase() === place.name.toUpperCase()){
                 return arrayItem;
               }
+              return undefined;
             })
-
+            //Gets the non undefined venues that were returned
             const venueMatch = venuesToCompare.filter((item)=>{
-              if(item != undefined)
+              if(item !== undefined)
                 return item;
+              return undefined;
             })
-
-            console.log("After Filtered (Venues Array)",venuesToCompare);
-
-            console.log("VenueMatch ",venueMatch);
 
             //If a successful venue match was made
             if(venueMatch.length > 0) {
               const venue = venueMatch[0];
-              console.log("CHECKING FOR SCOPE")
-              console.log("Venue within if statement is ",venue);
-              console.log("Marker is still ",marker);
-              console.log("Place is still ",place);
+              //Set Rating Variable
               let rating;
               if(venue.venue.rating){
                 rating = venue.venue.rating.toString()+'/10';
@@ -151,8 +104,7 @@ export class Map extends Component {
                 rating = 'N/A';
               }
 
-              console.log("Rating is ",rating);
-
+              //Set URL variables
               let url, urlLink;
               if(venue.venue.url){
                 url = venue.venue.url;
@@ -162,10 +114,10 @@ export class Map extends Component {
                 urlLink = '#';
               }
 
-              console.log("URL is ",url);
-
-              //Set Info Window
+              //Initialize Info Window
               let infowindow = new this.props.google.maps.InfoWindow();
+
+              //Set Opened JSX
               let opened = '';
               if(place.opening_hours){
                 // console.log("Opening hours are ",place.opening_hours.open_now)
@@ -178,6 +130,7 @@ export class Map extends Component {
                 opened = 'N/A';
               }
 
+              //Add InfoWindow with the Google & FourSquare data to map marker clicks
               this.props.google.maps.event.addListener(marker, 'click', () => {
                 marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
                 infowindow.setContent(`<h4>${place.name}</h4> <p>${place.vicinity}</p><p>Open Now: <strong>${opened}</strong></p><p>Rating: ${rating}</p><p>URL: <a href=${urlLink}>${url}</a></p>`);
@@ -210,9 +163,8 @@ export class Map extends Component {
             }
 
           }
+          //Venues are not found in foursquare
           else {
-            //Venues are not found and array length is 0
-            console.log("Venues array is EMPTY")
             //Set Info Window
             let infowindow = new this.props.google.maps.InfoWindow();
             let opened = '';
@@ -235,20 +187,17 @@ export class Map extends Component {
           }
 
         }else {
-          //No venues found
-          console.log("no venues found for ", item);
+          //No venues found matching
+          // console.log("no venues found for ", item);
         }
       })
     })
 
-    console.log("FROM  Outside Functions");
-
-
     return marker;
   }
 
+  //Makes API request to search for google maps coordinate locations
   fetchFourSquare = (latLong) => {
-    console.log("INSIDE THE CALL BACK funNTION",this.state)
 
     const fsURL = 'https://api.foursquare.com/v2/venues';
     const typeOfSearch = '/explore';
@@ -263,18 +212,16 @@ export class Map extends Component {
           } else return response.json();
          })
          .then((myJson)=> {
-           console.log(myJson);
            return myJson;
          })
          .catch((err)=>{
-           //alert("Error happened when fetching from FourSquare",err);
            if(!document.querySelector('#error')){
-
-
+             //If query limit is too much for credentials
              if(err.status === 429){
                document.querySelector('#root').insertAdjacentHTML('beforebegin',"<h3 id='error' style='color:red'>Error Fetching FourSquare Data: You have exceeded the API query limit, please try again with a fresh FourSquare client & secret key credentials.</h3>")
                throw err;
              }
+             //Internet or API key is wrong
              else{
                document.querySelector('#root').insertAdjacentHTML('beforebegin',"<h3 id='error' style='color:red'>Error Fetching FourSquare Data: Please check your internet connection & ensure that your client/secret key is properly set and try again.</h3>")
              }
@@ -282,91 +229,57 @@ export class Map extends Component {
            throw err;
          });
 
-    console.log(this.state.venue);
   }
 
+  //Helper function to get the lat long coordinates to an address
   getLatLong = (address) =>{
     const apiKey = MAP_KEY;
     const formattedAddress = address.split(' ').join('+');
     const preURL = 'https://maps.googleapis.com/maps/api/geocode/json?';
-
-
     const formattedURL = `${preURL}address=${formattedAddress}&key=${apiKey}`
-    console.log("fetch url is ",formattedURL);
 
     return fetch(formattedURL)
       .then((response)=>{
-        console.log("Success")
-        console.log(response)
         return response.json()
       })
       .then((myJSON)=>{
-        console.log("My JSON is ",myJSON);
         if(myJSON.status === 'REQUEST_DENIED'){
           throw Error;
-          return;
         }
         const toPassIntoState = myJSON.results[0].geometry.location;
         return toPassIntoState;
-        // this.setState({location:toPassIntoState})
       })
       .catch((err)=>{
-        console.log("Failed")
-        console.log(err)
         //Notifies user that the API key may be the problem.
-        // if(!document.querySelector('#error'))
-          document.querySelector('#root').insertAdjacentHTML('beforebegin',"<h3 id='error' style='color:red'>Error Fetching Google Maps Data: Please check your internet connection & ensure that your Google Maps API key is properly set and try again.</h3>")
-       throw err;
+        document.querySelector('#root').insertAdjacentHTML('beforebegin',"<h3 id='error' style='color:red'>Error Fetching Google Maps Data: Please check your internet connection & ensure that your Google Maps API key is properly set and try again.</h3>")
+         throw err;
      });
-
-    // Get latidude & longitude from address.
-    // Geocode.fromAddress(address).then(
-    //   response => {
-    //     const { lat, lng } = response.results[0].geometry.location;
-    //     console.log(lat, lng);
-    //     let latLong = { lat, lng };
-    //     console.log(latLong);
-    //     // this.setState({latLong: latLong});
-    //     return latLong;
-    //   },
-    //   error => {
-    //     console.error(error);
-    //   }
-    // );
   }
 
   //Received resource assistance from CSS-Tricks @ https://css-tricks.com/forums/topic/clickable-page-links-to-open-markers-on-google-map/
+  //Handle function for click events on list items
   showParkInfo = (event) =>{
-    console.log("This was clicked");
-    console.log(event);
-
+    //Prevents refresh of page
     event.preventDefault();
 
     let titleToFind = event.target.parentNode.dataset.id;
-    console.log("Title to find is set as ",titleToFind)
     let markerToClick;
-    console.log(this.state)
-    // this.manageMarker(titleToFind);
 
+    //Finds the marker associated with the link id / name
     for(let i = 0; i < this.state.listArray.length; i++) {
         if(this.state.listArray[i].id === titleToFind) {
           markerToClick = this.state.markers[i];
         }
     }
-    console.log("Marker to click is set as ",markerToClick);
 
     //Opens info window of the marker clicked
     new this.props.google.maps.event.trigger( markerToClick, 'click' );
-
+    //Changes the color of the icon when this link is clicked
     markerToClick.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
   }
 
-  // manageMarker(id){
-  //   console.log(this);
-  // }
-
+  //This is the main function to load the map on mount & on update
   loadMap() {
-    console.log("loading the map")
     if (this.props && this.props.google) {
       // google is available
       const {google} = this.props;
@@ -376,8 +289,7 @@ export class Map extends Component {
       const node = ReactDOM.findDOMNode(mapRef);
 
       let zoom = 13;
-      // let lat = 28.529270;
-      // let lng = -81.276423;
+      //Coordinates from App or User Generated
       let lat = this.props.location.lat;
       let lng = this.props.location.lng;
 
@@ -405,8 +317,6 @@ export class Map extends Component {
         infowindow.open(this.map, marker);
       });
 
-      console.log("Meters passed in is ",this.props.distance);
-
       var service = new google.maps.places.PlacesService(this.map);
       service.nearbySearch({
         location: center,
@@ -418,11 +328,6 @@ export class Map extends Component {
 
   render() {
 
-    // const style = {
-    //   width: '70vw',
-    //   height: '100vh'
-    // }
-
     return (
       <div>
         <MediaQuery query="(max-device-width: 1224px)">
@@ -430,14 +335,6 @@ export class Map extends Component {
             loading map...
           </main>
         </MediaQuery>
-
-        {/* <MediaQuery         query="(min-device-width: 426px)"
-        query="(max-device-width: 1224px)"
-          >
-          <main id="map-main" role="application" ref="map" style={{width: '70vw',height: '100vh'}}>
-            loading map...
-          </main>
-        </MediaQuery> */}
 
         <MediaQuery query="(min-device-width: 1225px)">
           <main id="map-main" role="application" ref="map" style={{width: '100%',height: '100vh'}}>
@@ -450,7 +347,7 @@ export class Map extends Component {
 
   }
 }
-
+//Sets ProtoTypes
 Map.propTypes = {
   google: PropTypes.object,
   zoom: PropTypes.number,

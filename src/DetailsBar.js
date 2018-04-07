@@ -6,16 +6,12 @@ import './DetailsBar.css';
 
 class DetailsBar extends Component {
 
+  //Sends data from FilterMarks to App so it can be passed to child component MAP
   updateLocation(obj) {
-    console.log("coming from details bar component");
-    console.log(obj);
-
-    //Sends to App
     this.props.updateLocation(obj);
   }
 
   render() {
-    // console.log("IN DETAILS BAR PROPS IS ",this.props)
     return (
       <div className="sideBar">
         <header className="header">
@@ -39,10 +35,6 @@ class DetailsBar extends Component {
             <p>Data Provided By: Google Maps & FourSquare</p>
           </footer>
         </div>
-
-
-
-
       </div>
     );
   }

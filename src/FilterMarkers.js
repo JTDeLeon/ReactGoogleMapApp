@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import './FilterMarkers.css'
 
 class FilterMarkers extends Component {
-
+  //Where event details can be added in order to see what the application sees from the user input
   handleChange = (event) => {
-    console.log("Change has occured")
-    console.log(event.target.value)
+    // console.log("Change has occured")
+    // console.log(event.target.value)
   }
 
+  //Handles the click event from the user
   handleClick = (event) => {
-    console.log("click has occured")
+    //Checks to ensure that the user inserted a value into the search input
     if(document.querySelector('#location').value.length === 0){
       window.alert("Uh Oh! Insert an address please.");
     }else{
@@ -18,10 +19,8 @@ class FilterMarkers extends Component {
         address: document.querySelector('#location').value,
         distance: document.querySelector('#distance').value
       }
-      console.log(locationDetails.address);
-      console.log(locationDetails.distance);
 
-      //Sends to parent component
+      //Sends to parent component DetailsBar
       this.props.updateLocation(locationDetails);
 
       return locationDetails;

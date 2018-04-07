@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import Geocode from "react-geocode";
 import { MAP_KEY } from './Credentials';
 import DetailsBar from './DetailsBar'
 import Container from './Container'
@@ -17,130 +16,62 @@ class App extends Component {
     listOfParks: []
   }
 
-
+  //Fetches the address Lat Long coordinates
   getLatLong(address){
     const apiKey = MAP_KEY;
     const formattedAddress = address.split(' ').join('+');
     const preURL = 'https://maps.googleapis.com/maps/api/geocode/json?';
-
-
     const formattedURL = `${preURL}address=${formattedAddress}&key=${apiKey}`
-    console.log("fetch url is ",formattedURL);
 
     fetch(formattedURL)
       .then((response)=>{
-        console.log("Success")
-        console.log(response)
         return response.json()
       })
       .then((myJSON)=>{
-        console.log("My JSON is ",myJSON);
+        //Handles if API key is incorrect
         if(myJSON.status === 'REQUEST_DENIED'){
           throw Error;
-          return;
         }
-
         const toPassIntoState = myJSON.results[0].geometry.location;
-        console.log(toPassIntoState)
+        //Sets the new location coordinates in state
         this.setState({location:toPassIntoState})
       })
       .catch((err)=>{
-        console.log("Failed")
-        console.log(err)
-        //Notifies user that the API key may be the problem.
-        // if(!document.querySelector('#error'))
-          document.querySelector('#root').insertAdjacentHTML('beforebegin',"<h3 id='error' style='color:red'>Error Fetching Google Maps Data: Please check your internet connection & ensure that your Google Maps API key is properly set and try again.</h3>")
+        //Notifies user that the API key or Internet may be the problem.
+        document.querySelector('#root').insertAdjacentHTML('beforebegin',"<h3 id='error' style='color:red'>Error Fetching Google Maps Data: Please check your internet connection & ensure that your Google Maps API key is properly set and try again.</h3>")
        throw err;
      });
-
-    // Geocode.setApiKey("AIzaSyCFJfDwa-JEntdf_ABHEmuF1QS27rDJaao");
-    //
-    // // Get latidude & longitude from address.
-    // Geocode.fromAddress(address).then(
-    //   response => {
-    //     const { lat, lng } = response.results[0].geometry.location;
-    //     console.log(lat, lng);
-    //     console.log(lat);
-    //     console.log(lng);
-    //
-    //     let newLocation = this.state.location;
-    //     console.log("OLD Location",newLocation);
-    //
-    //     newLocation.lat = lat;
-    //     newLocation.lng = lng;
-    //     console.log("NEW Location",newLocation);
-    //     this.setState({location:newLocation})
-    //
-    //     console.log(this.state);
-    //
-    //   },
-    //   error => {
-    //     console.error(error);
-    //   }
-    // );
   }
 
-
-
+  //Converts Miles to Meters
   getDistance(miles){
     const meters = Math.ceil(miles*1609.344);
-    console.log("METERS IS NOW ",meters);
     this.setState({metersAway:meters});
   }
 
+  //Initial handle function when a new location is set by a user
   updateLocation(obj) {
-    console.log("coming from APP component");
-    console.log(obj);
-
     this.getLatLong(obj.address);
     this.getDistance(obj.distance);
-
-
-
   }
 
+  //Updates the parks in the listOfParks state
   updateListView(obj) {
-    console.log("coming from APP component List View");
-    console.log(obj);
-    console.log(this.state.refresh);
-    console.log(this.state.listOfParks);
-
-
+    //If the length of returned parks is different compared to previously set, then update.
     if(this.state.listOfParks.length !== obj.length){
-      // for(var i = 0; i<obj.length; i++){
-      //   if(this.state.listOfParks[i].id !== obj[i].id){
-          console.log("+++ Inside State +++ ")
-          //@TODO NEED TO FIGURE OUT WHY THIS DOESN"T RUN ON REFRESH OF NEW LOCATION
-          console.log(obj);
-          console.log(this.state.listOfParks);
+      this.setState({listOfParks:obj});
+    }
+    //If the arrays are the same length, then we need to check if the contents are different
+    else {
+      for(var i = 0; i<obj.length; i++){
+        if(this.state.listOfParks[i].id !== obj[i].id){
           this.setState({listOfParks:obj});
-          console.log(this.state.listOfParks);
-
-        // }
-      }
-      else {
-        for(var i = 0; i<obj.length; i++){
-          if(this.state.listOfParks[i].id !== obj[i].id){
-            console.log("+++ Inside State +++ ")
-            //@TODO NEED TO FIGURE OUT WHY THIS DOESN"T RUN ON REFRESH OF NEW LOCATION
-            console.log(obj);
-            console.log(this.state.listOfParks);
-            this.setState({listOfParks:obj});
-            console.log(this.state.listOfParks);
-          }
         }
       }
-
-
-
-
-    console.log(this.state);
-
+    }
   }
 
   render() {
-    console.log("APP IS RERENDERING")
-    console.log(this.state)
     return (
       <div className="App">
         <div className="details_Bar">

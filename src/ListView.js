@@ -4,11 +4,11 @@ import './ListView.css'
 class ListView extends Component {
 
   render() {
-    console.log("IN LIST VIEW THE PROPS ARE",this.props.parks);
+    //Clears the previous list if there is a list in the DOM
     if(document.getElementById("list")){
       document.getElementById("list").innerHTML = "";
     }
-
+    //Initates a unique ID counter for each element added
     let count = 0;
     return (
       <div role="complementary">
