@@ -1,3 +1,38 @@
+# Orlando Parks Map! -REACT-
+
+## Description Of Project
+This project was built with react.
+This web application allows users the ability to search for 'parks' in their vicinity.
+
+This application will take the user inputted address as well as the distance requested and search for a list of parks given the parameters.
+
+Please enjoy! If you have any questions or concerns, feel free to open a new thread to discuss.
+
+## How To Use
+#### Build & Run The Production Application
+Once you have a version of the application files <code>cd</code> into the files and run <code>npm run build</code> as this should build a production level version of the application. Once you have built the application, you can use <code>serve -s build</code> to open the server at a designated port. Once port is opened, with your web browser, navigate to the port to view the application.
+
+#### Run The Source Application
+Once you have a version of the application files <code>cd</code> into the files and run <code>npm start</code>. This will open a server at a designated port serving the src files. Once port is opened, with your web browser, navigate to the port to view the application.
+
+## APIs Utilized
+This application is built using the following APIs:
+- Google Maps API
+- FourSquare API
+
+## Future Enhancements
+#### Utilizing YELP API
+- Add photos into the location infowindows for locations
+- Add user generated reviews in the infowindows for locations
+
+## How To Contribute
+If you would like to contribute to this application, please feel free to open a thread to have a discussion on the type of contribution you would like to make. Happy to receive the help!
+
+### Contributors
+Jonathan Deleon, Creator & Maintainer
+
+<hr/>
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
@@ -300,7 +335,7 @@ In the WebStorm menu `Run` select `Edit Configurations...`. Then click `+` and s
 
 Start your app by running `npm start`, then press `^D` on macOS or `F9` on Windows and Linux or click the green debug icon to start debugging in WebStorm.
 
-The same way you can debug your application in IntelliJ IDEA Ultimate, PhpStorm, PyCharm Pro, and RubyMine. 
+The same way you can debug your application in IntelliJ IDEA Ultimate, PhpStorm, PyCharm Pro, and RubyMine.
 
 ## Formatting Code Automatically
 
@@ -1989,7 +2024,7 @@ If you’re using [Apache HTTP Server](https://httpd.apache.org/), you need to c
     RewriteRule ^ index.html [QSA,L]
 ```
 
-It will get copied to the `build` folder when you run `npm run build`. 
+It will get copied to the `build` folder when you run `npm run build`.
 
 If you’re using [Apache Tomcat](http://tomcat.apache.org/), you need to follow [this Stack Overflow answer](https://stackoverflow.com/a/41249464/4878474).
 
@@ -2419,7 +2454,7 @@ To resolve this:
 1. Open an issue on the dependency's issue tracker and ask that the package be published pre-compiled.
   * Note: Create React App can consume both CommonJS and ES modules. For Node.js compatibility, it is recommended that the main entry point is CommonJS. However, they can optionally provide an ES module entry point with the `module` field in `package.json`. Note that **even if a library provides an ES Modules version, it should still precompile other ES6 features to ES5 if it intends to support older browsers**.
 
-2. Fork the package and publish a corrected version yourself. 
+2. Fork the package and publish a corrected version yourself.
 
 3. If the dependency is small enough, copy it to your `src/` folder and treat it as application code.
 
